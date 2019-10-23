@@ -1,0 +1,168 @@
+{% extends 'base.html' %}
+{% block head %}
+<link rel="icon" type="image/x-icon" href="#"/>
+<link rel="stylesheet" href="/static/css/create.css">
+<script>
+    let username;
+    let uid;
+    $.ajax({
+        url: "{{ url_for('app_common.get_user') }}",
+        type: "GET",
+        success: function (response) {
+            let user = $.parseJSON(response);
+            username = user.username;
+            uid = user.uid;
+        },
+        error: function () {
+            $(document).ready(function () {
+                $("#error-modal").modal("show");
+            })
+        }
+    });
+
+    function sign() {
+        window.location.href = "{{ url_for('app_sign.sign') }}"
+    }
+</script>
+{% endblock %}
+
+{% block body %}
+<div class="container">
+    <div class="modal fade" id="error-modal" tabindex="-1" role="dialog" aria-labelledby="error-tip"
+         aria-hidden="true">
+        <div class="modal-dialog" role="document">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="error-tip">错误提示</h5>
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                        <span aria-hidden="true">&times;</span>
+                    </button>
+                </div>
+                <div class="modal-body">
+                    您的登录状态失效，请重新登录
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-dismiss="modal">关闭</button>
+                    <button type="button" class="btn btn-primary" onclick="sign()">重新登录</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="modal fade" id="img-modal" tabindex="-1" role="dialog" aria-labelledby="img-tip"
+         aria-hidden="true">
+        <div class="modal-dialog modal-dialog-centered" role="document">
+            <div class="modal-content">
+                <div class="modal-body" id="tip">
+                </div>
+            </div>
+        </div>
+    </div>
+
+
+    <div class="row">
+        <div class="col"></div>
+        <div class="col-7" id="create">
+            <div class="input-group ">
+                <div class="input-group-prepend">
+                    <span class="input-group-text">写点什么</span>
+                </div>
+                <textarea id="text" class="form-control" aria-label="With textarea" rows="3" maxlength="100"></textarea>
+            </div>
+
+            <div class="input-group" style="margin-top: 20px">
+                <div class="custom-file">
+                    <input type="file" class="custom-file-input" id="choose-picture"
+                           accept="image/png, image/jpeg, image/gif, image/jpg" onchange="show(this)">
+                    <label class="custom-file-label" id="label-tip" for="choose-picture">选择一张图片</label>
+                </div>
+                <div class="input-group-append">
+                    <button class="btn btn-outline-secondary" type="button" id="publish" onclick="create()">发表</button>
+                </div>
+            </div>
+            <img id="img-test" src="" style="margin-top: 4%">
+        </div>
+        <div class="col"></div>
+    </div>
+</div>
+{% endblock %}
+
+{% block js %}
+<script>
+    let base64;
+    let text;
+    let dialog = document.getElementById("img-modal");
+
+    function create() {
+        text = $("#text").val();
+        if (!base64) {
+            dialog_tip("text");
+            $("#img-modal").modal("show");
+            return;
+        }
+        dialog_tip("progress");
+        dialog_tip("progress");
+        $("#img-modal").modal({
+            keyboard: false,
+            backdrop: 'static'
+        });
+        let params = new FormData();
+        params.append("uid", uid);
+        params.append("text", text);
+        params.append("image", base64);
+        $.ajax({
+            url: "{{ url_for('app_create.create_post') }}",
+            type: "POST",
+            data: params,
+            cache: false,
+            processData: false,
+            contentType: false,
+            success: function () {
+                $("#img-modal").modal("hide");
+                window.location.href = "{{ url_for('app_home.home') }}";
+            },
+            error: function () {
+
+            }
+        })
+    }
+
+    function show(file) {
+        if (!file.files || !file.files[0]) {
+            return;
+        }
+        let reader = new FileReader();
+        reader.readAsDataURL(file.files[0]);
+        reader.onload = function (event) {
+            let img = new Image();
+            img.src = event.target.result;
+            $(img).on('load', function () {
+                let ele = document.getElementById("create");
+                let width = parseFloat(window.getComputedStyle(ele).getPropertyValue("width")) - 30;
+                let height = width * img.height / img.width;
+                console.log(width + "   " + height);
+                document.getElementById("label-tip").innerHTML = "点击更换图片";
+                let picture = document.getElementById("img-test");
+                base64 = event.target.result;
+                picture.setAttribute("src", base64);
+                picture.setAttribute("width", width + "px");
+                picture.setAttribute("height", height + "px")
+            });
+
+        }
+    }
+
+    function dialog_tip(tip) {
+        if (tip === "text") {
+            console.log("text");
+            document.getElementById("tip").innerHTML = '图片不能为空哦!'
+        } else if (tip === "progress") {
+            document.getElementById("tip").innerHTML = '<div class="progress">\n' +
+                '  <div class="progress-bar progress-bar-striped progress-bar-animated" style="width: 100%"></div>\n' +
+                '</div>'
+        }
+    }
+
+
+</script>
+{% endblock %}

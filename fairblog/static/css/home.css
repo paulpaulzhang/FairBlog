@@ -1,0 +1,98 @@
+p, h1, h2, h3, h4, h4, h5, span {
+    margin: 0;
+}
+
+#container {
+    margin-top: 60px;
+    margin-bottom: 60px;
+}
+
+.post {
+    margin-top: 60px;
+    background-color: #ffffff;
+    border: 1px solid #D7DBDD;
+    border-radius: 5px;
+}
+
+.user {
+    height: 60px;
+    display: flex; /*Flex布局*/
+    display: -webkit-flex; /* Safari */
+    align-items: center; /*指定垂直居中*/
+    padding-left: 10px;
+}
+
+.avatar {
+    display: inline-block;
+    float: left;
+    width: 40px;
+    height: 40px;
+    border-radius: 50%;
+    margin-right: 10px;
+    cursor: pointer;
+}
+
+.username {
+    cursor: default;
+}
+
+.img {
+}
+
+.content {
+    padding: 10px;
+}
+
+.content_text {
+    cursor: default;
+}
+
+#user-sign {
+    margin-top: 60px;
+}
+
+#user-container {
+    cursor: pointer;
+    top: 90px;
+    position: -webkit-sticky;
+    position: sticky;
+}
+
+#user-avatar {
+    width: 60px;
+    height: 60px;
+    border-radius: 50%;
+}
+
+#user-username {
+    margin-left: 10px;
+    font-size: large;
+    font-weight: bold;
+}
+
+#create {
+    height: 60px;
+    border-radius: 5px;
+    background-color: #ffffff;
+    margin-top: 30px;
+    border: 1px solid #D7DBDD;
+    display: flex; /*Flex布局*/
+    display: -webkit-flex; /* Safari */
+    align-items: center; /*指定垂直居中*/
+    cursor: pointer;
+
+    top: 160px;
+    position: -webkit-sticky;
+    position: sticky;
+}
+
+#create-img {
+    margin-left: 10px;
+    width: 30px;
+    height: 30px;
+}
+
+#create-text {
+    margin-left: 20px;
+    font-size: large;
+}

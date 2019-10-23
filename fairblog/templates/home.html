@@ -1,0 +1,129 @@
+{% extends 'base.html' %}
+{% block head %}
+<link rel="icon" type="image/x-icon" href="#"/>
+<link rel="stylesheet" href="/static/css/home.css">
+<script>
+
+</script>
+{% endblock %}
+
+{% block body %}
+<div class="container" id="container">
+    <div class="modal fade" id="error-modal" tabindex="-1" role="dialog" aria-labelledby="error-tip"
+         aria-hidden="true">
+        <div class="modal-dialog" role="document">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="error-tip">错误提示</h5>
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                        <span aria-hidden="true">&times;</span>
+                    </button>
+                </div>
+                <div class="modal-body">
+                    您的登录状态失效，请重新登录
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-dismiss="modal">关闭</button>
+                    <button type="button" class="btn btn-primary" onclick="sign()">重新登录</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="row">
+        <div class="col"></div>
+        <div class="col-lg-10">
+            <div class="row">
+                <div class="col-lg-8 post_container" id="post_container">
+                </div>
+                <div class="col-lg-4" id="user-sign">
+                    <div id="user-container" style="top: 90px">
+                        <img id="user-avatar" src="" alt="">
+                        <span id="user-username"></span>
+                    </div>
+
+                    <div id="create" style="top: 160px">
+                        <img id="create-img" src="/static/img/edit.png" alt="编辑">
+                        <span id="create-text">写点什么吧</span>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="col"></div>
+    </div>
+</div>
+{% endblock %}
+
+{% block js %}
+<script>
+    let username;
+    let uid;
+    let avatar;
+    const users = [];
+    $.ajax({
+        url: "{{ url_for('app_common.get_user') }}",
+        type: "GET",
+        success: function (response) {
+            let user = $.parseJSON(response);
+            username = user.username;
+            uid = user.uid;
+            avatar = user.avatar;
+            console.log(username, uid, avatar);
+            document.getElementById("user-username").innerHTML = username;
+            document.getElementById("user-avatar").setAttribute("src", avatar);
+        },
+        error: function () {
+            $(document).ready(function () {
+                $("#error-modal").modal("show")
+            })
+        }
+    });
+
+    function sign() {
+        window.location.href = "{{ url_for('app_sign.sign') }}"
+    }
+
+    function loadPost(pid, uid, username, avatar, content, image) {
+        let ele = document.getElementById("post_container");
+        let width = parseFloat(window.getComputedStyle(ele).getPropertyValue("width")) - 30 - 2; //30为边距 2为border
+        let post = "<div class='post'>" +
+            "        <div class='user align-items-center'>" +
+            "           <img class='avatar' src=" + avatar + " alt='' onclick='to_user(this)'>" +
+            "           <h5 class='username'>" + username + "</h5>" +
+            "        </div>" +
+            "        <div class='img'>" +
+            "           <img src=" + image + " alt='' style='width:" + width + "px; height: auto'>" +
+            "        </div>" +
+            "        <div class='content'>" +
+            "           <p class='content_text'>" + content + "</p>" +
+            "        </div>" +
+            "   </div>";
+        $("#post_container").append(post)
+    }
+
+    $.ajax({
+        url: "{{ url_for('app_home.get_post') }}",
+        type: "GET",
+        success: function (response) {
+            let posts = $.parseJSON(response);
+            for (let i = 0; i < posts.length; i++) {
+                loadPost(posts[i].id, posts[i].uid, posts[i].username, posts[i].avatar, posts[i].content, posts[i].image);
+                users[posts[i].username] = posts[i].uid;
+            }
+        },
+        error: function () {
+        }
+    });
+
+    $("#create").click(function () {
+        window.location.href = "{{ url_for('app_create.create') }}"
+    });
+
+    function to_user(ele) {
+        let name = ele.parentNode.children[1].innerHTML;
+        let uid = users[name];
+        console.log(uid);
+
+    }
+</script>
+{% endblock %}

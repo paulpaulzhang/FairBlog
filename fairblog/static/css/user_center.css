@@ -1,0 +1,82 @@
+p, h1, h2, h3, h4, h4, h5, span {
+    margin: 0;
+}
+
+.container {
+    margin-top: 120px;
+}
+
+
+.user {
+    padding-bottom: 20px;
+    border-bottom: 1px solid #ECF0F1;
+}
+
+#avatar {
+    width: 150px;
+    height: 150px;
+    border-radius: 50%;
+    margin-left: 24%;
+}
+
+#username {
+    margin-top: 10px;
+    font-size: 24pt;
+    display: inline-block;
+    cursor: default;
+}
+
+#introduction {
+    clear: left;
+    display: block;
+    margin-top: 35px;
+    font-size: 16pt;
+    color: #4e555b;
+    cursor: default;
+}
+
+#edit {
+    margin-left: 15px;
+    padding: 2px 8px;
+    position: relative;
+    top: -10px;
+    border: 1px solid #D7DBDD;
+}
+
+#posts-container {
+    margin-top: 20px;
+    margin-bottom: 100px;
+}
+
+.img-box {
+    position: relative;
+    margin-top: 50px;
+}
+
+.content-div {
+    position: absolute;
+    display: none;
+    bottom: 0;
+    left: 0;
+    border-radius: 5px;
+    background: hsla(0, 0%, 0%, .3);
+    cursor: default;
+}
+
+.content {
+    color: #ffffff;
+    font-size: 14pt;
+    margin: 0 auto;
+    cursor: default;
+}
+
+.img {
+    border-radius: 5px;
+}
+
+.img-box:hover .content-div {
+    display: flex; /*Flex布局*/
+    display: -webkit-flex; /* Safari */
+    align-items: center; /*指定垂直居中*/
+}
+
