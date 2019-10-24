@@ -6,6 +6,7 @@ from fairblog.common import app_common
 from fairblog.create import app_create
 from fairblog.sign import app_sign
 from fairblog.home import app_home
+from fairblog.ai_model import app_ai
 
 app = Flask(__name__)
 app.register_blueprint(app_user_center)
@@ -13,6 +14,7 @@ app.register_blueprint(app_common)
 app.register_blueprint(app_create)
 app.register_blueprint(app_sign)
 app.register_blueprint(app_home)
+app.register_blueprint(app_ai)
 
 app.config.from_object('config')
 app.config['SQLALCHEMY_COMMIT_ON_TEARDOWN'] = True

@@ -1,6 +1,4 @@
-import json
-
-from flask import render_template, request, session, redirect, url_for, Blueprint
+from flask import render_template, Blueprint
 
 app_ai = Blueprint('app_ai', __name__, template_folder='templates')
 
