@@ -1,12 +1,9 @@
-import base64
 import re
-import uuid
-import config
 import time
 
 from flask import render_template, request, session, redirect, url_for, Blueprint
 
-from fairblog import database
+from fairblog import database, tool
 
 app_create = Blueprint('app_create', __name__, template_folder='templates')
 
@@ -26,15 +23,7 @@ def create_post():
     img_info = re.search('data:image/(?P<ext>.*?);base64,(?P<data>.*)', image64, re.DOTALL)
 
     if img_info:
-        ext = img_info.groupdict().get('ext')  # 后缀
-        data = img_info.groupdict().get('data')  # 图片data
-
-        image = base64.urlsafe_b64decode(data)
-        filename = "{}.{}".format(uuid.uuid4(), ext)  # 文件名
-        path = "{}{}".format(config.IMAGE_PATH, filename)  # 服务器图片存路径
-        with open(path, mode='wb') as f:
-            f.write(image)
-        res_path = '{}{}'.format(config.FTP_HOST, filename)
+        res_path = tool.save_base64_img(img_info)
         db = database.init()
         cursor = db.cursor()
         cursor.execute('INSERT INTO post(uid, content, image, date) VALUES(%s, %s, %s, %s)',

@@ -1,4 +1,4 @@
-p, h1, h2, h3, h4, h4, h5, span {
+p, h1, h2, h3, h4, h4, h5, span, label {
     margin: 0;
 }
 
@@ -44,7 +44,7 @@ p, h1, h2, h3, h4, h4, h5, span {
 }
 
 #posts-container {
-    margin-top: 20px;
+
     margin-bottom: 100px;
 }
 
@@ -80,3 +80,21 @@ p, h1, h2, h3, h4, h4, h5, span {
     align-items: center; /*指定垂直居中*/
 }
 
+.vec-center {
+    display: flex; /*Flex布局*/
+    display: -webkit-flex; /* Safari */
+    align-items: center; /*指定垂直居中*/
+}
+
+.bui-radios-label {
+    margin-right: 20px;
+}
+
+#span-user-info, #span-password {
+    cursor: default;
+    font-size: 14pt;
+}
+
+#span-user-info {
+    color: #007bff;
+}

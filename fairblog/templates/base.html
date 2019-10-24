@@ -63,7 +63,7 @@
         <!--占位-->
     </div>
     <div class="col col-lg-2 menu">
-        <a class="navbar-me" href="{{ url_for('app_user_center.user_center') }}">
+        <a class="navbar-me" id="navbar-me" href="">
             <img src="/static/img/me.png" id="me" alt="Me">
         </a>
     </div>
@@ -71,5 +71,21 @@
 
 {% block body %} {% endblock %}
 </body>
+<script>
+    $.ajax({
+        url: "{{ url_for('app_common.get_user') }}",
+        type: "GET",
+        success: function (response) {
+            let user = $.parseJSON(response);
+            let uid = user.uid;
+            document.getElementById("navbar-me").href = "{{ url_for('app_user_center.user_center') }}?uid=" + uid + "&show-uid=" + uid;
+        },
+        error: function () {
+            $(document).ready(function () {
+                $("#error-modal").modal("show")
+            })
+        }
+    });
+</script>
 {% block js %} {% endblock %}
 </html>

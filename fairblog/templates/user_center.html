@@ -2,47 +2,138 @@
 {% block head %}
 <link rel="icon" type="image/x-icon" href="#"/>
 <link rel="stylesheet" href="/static/css/user_center.css">
+<link rel="stylesheet" href="/static/css/radio_button.css">
 
 <style>
+    .span-tip {
+        color: #ff0000;
+        display: none;
+    }
 
+    #avatar-show {
+        width: 100px;
+        height: 100px;
+        border-radius: 50%;
+    }
 </style>
 {% endblock %}
 
 {% block body %}
 <div class="modal fade" id="userInfo" tabindex="-1" role="dialog" aria-labelledby="userInfo" aria-hidden="true">
-    <div class="modal-dialog" role="document">
+    <div class="modal-dialog " role="document">
         <div class="modal-content">
             <div class="modal-header">
-                <h5 class="modal-title" id="userInfoLabel">用户信息</h5>
-                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-                    <span aria-hidden="true">&times;</span>
-                </button>
+                <div class="row">
+                    <div class="col-6" onclick="changeModelFunc('span-user-info')">
+                        <span id="span-user-info">用户信息</span>
+                    </div>
+                    <div class="col-6" onclick="changeModelFunc('span-password')">
+                        <span id="span-password">修改密码</span>
+                    </div>
+                </div>
             </div>
             <div class="modal-body">
-                <div class="input-group mb-3">
-                    <div class="input-group-prepend">
-                        <span class="input-group-text" id="basic-addon1">用户名</span>
+                <div id="div-user-info">
+                    <div class="form-group row">
+                        <label for="input-username" class="col-sm-3 col-form-label"
+                               style="text-align: right">用户名</label>
+                        <div class="col-sm-8">
+                            <input type="text" class="form-control" id="input-username">
+                            <span class="span-tip" id="span-username-tip">用户名不能为空</span>
+                        </div>
                     </div>
-                    <input type="text" class="form-control" readonly="readonly" aria-label="Username"
-                           aria-describedby="basic-addon1">
+                    <div class="form-group row">
+                        <label class="col-sm-3 col-form-label" style="text-align: right">性别</label>
+                        <div class="col-sm-8 vec-center">
+                            <label class="bui-radios-label bui-radios-anim" onclick="gender = '男'">
+                                <input type="radio" name="gender" id="gender-male"><i class="bui-radios"></i>男
+                            </label>
+                            <label class="bui-radios-label bui-radios-anim" onclick="gender = '女'">
+                                <input type="radio" name="gender" id="gender-female"><i class="bui-radios"></i>女
+                            </label>
+                        </div>
+                    </div>
+                    <div class="form-group row">
+                        <label for="input-introduction" class="col-sm-3 col-form-label"
+                               style="text-align: right">个性签名</label>
+                        <div class="col-sm-8">
+                            <input type="text" class="form-control" id="input-introduction" maxlength="100">
+                        </div>
+                    </div>
                 </div>
-
-                <div class="input-group mb-3">
-                    <div class="input-group-prepend">
-                        <span class="input-group-text" id="basic-addon2">用户名</span>
+                <div id="div-password" style="display: none">
+                    <div class="form-group row">
+                        <label for="input-username" class="col-sm-3 col-form-label"
+                               style="text-align: right">旧密码</label>
+                        <div class="col-sm-8">
+                            <input type="password" class="form-control" id="input-old-psd">
+                            <span class="span-tip" id="span-old-psd-tip">请输入旧密码</span>
+                        </div>
                     </div>
-                    <input type="text" class="form-control" readonly="readonly" aria-label="Username"
-                           aria-describedby="basic-addon2">
+
+                    <div class="form-group row">
+                        <label for="input-username" class="col-sm-3 col-form-label"
+                               style="text-align: right">新密码</label>
+                        <div class="col-sm-8">
+                            <input type="password" class="form-control" id="input-new-psd">
+                            <span class="span-tip" id="span-new-psd-tip">请输入新密码</span>
+                        </div>
+                    </div>
+
+                    <div class="form-group row">
+                        <label for="input-username" class="col-sm-3 col-form-label"
+                               style="text-align: right">确认密码</label>
+                        <div class="col-sm-8">
+                            <input type="password" class="form-control" id="input-con-psd">
+                            <span class="span-tip" id="span-con-psd-tip">请再次输入新密码</span>
+                        </div>
+                    </div>
                 </div>
             </div>
             <div class="modal-footer">
+                <button type="button" class="btn btn-danger" id="logout" style="margin-right: 240px" onclick="logout()">
+                    退出登录
+                </button>
+                <div></div>
                 <button type="button" class="btn btn-secondary" data-dismiss="modal">关闭</button>
-                <button type="button" class="btn btn-primary">确认</button>
+                <button type="button" class="btn btn-primary" onclick="change()">提交</button>
             </div>
         </div>
     </div>
 </div>
 
+<div class="modal fade" id="userAvatar" tabindex="-1" role="dialog" aria-labelledby="userAvatar" aria-hidden="true">
+    <div class="modal-dialog modal-sm" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h6 class="modal-title" id="exampleModalLabel">更换头像</h6>
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+            <div class="modal-body">
+                <div class="row" style="padding-bottom: 20px">
+                    <div class="col"></div>
+                    <div class="col">
+                        <img id="avatar-show" src="" alt="">
+                    </div>
+                    <div class="col"></div>
+                </div>
+                <div class="input-group">
+                    <div class="custom-file">
+                        <input type="file" class="custom-file-input" id="choose-avatar" aria-describedby="choose-avatar"
+                               accept="image/png, image/jpeg, image/jpg" onchange="showAvatar(this)">
+                        <label class="custom-file-label" id="label-tip" for="choose-avatar">选择头像</label>
+                    </div>
+                </div>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" data-dismiss="modal">关闭</button>
+                <button type="button" class="btn btn-primary" id="update" onclick="changeAvatar()">提交</button>
+            </div>
+        </div>
+    </div>
+</div>
 
 <div class="container">
     <div class="row">
@@ -50,15 +141,15 @@
         <div class="col-lg-10">
             <div class="user row">
                 <div class="col-lg-4">
-                    <img id="avatar" src="/static/img/me.png" alt="">
+                    <img id="avatar" src="" alt="" onclick="userAvatarChange()">
                 </div>
 
                 <div class="col">
-                    <span id="username">paulpaulzhag</span>
+                    <span id="username"></span>
                     <button type="button" class="btn btn-light" id="edit" onclick="userInfoEdit()">
-                        编辑
+                        选项
                     </button>
-                    <span id="introduction">lalalalalalalalalalalala</span>
+                    <span id="introduction"></span>
                 </div>
             </div>
 
@@ -75,6 +166,19 @@
 
 {% block js %}
 <script>
+    let username;
+    let avatar;
+    let gender;
+    let introduction;
+
+    let params = document.URL.split("?")[1];
+    let uid = params.split("&")[0].split("=")[1];
+    let show_uid = params.split("&")[1].split("=")[1];
+
+    if (show_uid !== uid) {
+        $("#edit").hide()
+    }
+
     function loadPicture(pid, content, image) {
         let post_cols = document.getElementsByClassName("post-col");
         let width = parseFloat(window.getComputedStyle(post_cols[0]).getPropertyValue("width")) - 30; //30为边距
@@ -86,9 +190,10 @@
             '  </div>'
     }
 
+
     $.ajax({
         url: "{{ url_for('app_user_center.get_post_by_uid') }}",
-        data: {"uid": 1},
+        data: {'uid': show_uid},
         type: "POST",
         success: function (response) {
             let post_cols = document.getElementsByClassName("post-col");
@@ -108,10 +213,205 @@
         }
     });
 
+    $.ajax({
+        url: "{{ url_for('app_common.get_user_by_uid') }}",
+        type: "POST",
+        data: {"uid": show_uid},
+        success: function (response) {
+            let data = $.parseJSON(response);
+            username = data.username;
+            avatar = data.avatar;
+            gender = data.gender;
+            introduction = data.introduction;
+
+            document.getElementById("avatar").src = avatar;
+            document.getElementById("username").innerHTML = username;
+            document.getElementById("introduction").innerHTML = introduction;
+
+            if (uid === show_uid) {
+                $("#input-username").val(username);
+                $("#input-introduction").val(introduction);
+                if (gender === "男") {
+                    $("#gender-male").attr("checked", true);
+                } else if (gender === "女") {
+                    $("#gender-female").attr("checked", true);
+                }
+
+                document.getElementById("avatar-show").src = avatar
+            }
+
+        },
+        error: function () {
+
+        }
+    });
+
     function userInfoEdit() {
         $("#userInfo").modal({
             backdrop: 'static',
             keyboard: false
+        })
+    }
+
+    let cur_func = "用户信息";
+
+    function changeModelFunc(id) {
+        let curEle = document.getElementById(id);
+        cur_func = curEle.innerHTML;
+        curEle.style.color = "#007bff";
+        if (cur_func === '用户信息') {
+            document.getElementById("span-password").style.color = "#000000";
+            document.getElementById("div-user-info").style.display = "";
+            document.getElementById("div-password").style.display = "none";
+        } else {
+            document.getElementById("span-user-info").style.color = "#000000";
+            document.getElementById("div-password").style.display = "";
+            document.getElementById("div-user-info").style.display = "none";
+        }
+    }
+
+    function change() {
+        if (cur_func === "用户信息") {
+            username = $("#input-username").val();
+            introduction = $("#input-introduction").val();
+            changeUserInfo(uid, username, gender, introduction)
+        } else {
+            let old_psd = $("#input-old-psd").val();
+            let new_psd = $("#input-new-psd").val();
+            let con_psd = $("#input-con-psd").val();
+            changePassword(uid, old_psd, new_psd, con_psd)
+        }
+    }
+
+    function changeUserInfo(uid, username, gender, introduction) {
+        if (username === "") {
+            $("#span-username-tip").show();
+            return;
+        }
+        $("#span-username-tip").hide();
+        $.ajax({
+            url: "{{ url_for('app_user_center.update_username_info') }}",
+            type: "POST",
+            data: {'uid': uid, 'username': username, 'gender': gender, 'introduction': introduction},
+            success: function (response) {
+                if (response === "ok") {
+                    window.location.reload()
+                }
+            },
+            error: function () {
+
+            }
+        })
+    }
+
+    function changePassword(uid, oldPsd, newPsd, conPsd) {
+        if (oldPsd === "") {
+            $("#span-old-psd-tip").show();
+            return;
+        }
+        $("#span-old-psd-tip").hide();
+        if (newPsd === "") {
+            $("#span-new-psd-tip").html("新密码不能为空");
+            $("#span-new-psd-tip").show();
+            return;
+        }
+        $("#span-new-psd-tip").hide();
+        if (oldPsd === newPsd) {
+            $("#span-new-psd-tip").html("新密码不能和旧密码相同");
+            $("#span-new-psd-tip").show();
+            return;
+        }
+        if (newPsd.length < 6) {
+            $("#span-new-psd-tip").html("密码不能小于6位");
+            $("#span-new-psd-tip").show();
+            return;
+        }
+        if (conPsd === "") {
+            $("span-con-psd-tip").html("请再次输入新密码");
+            $("spam-con-psd-tip").show();
+            return;
+        }
+        if (conPsd !== newPsd) {
+            $("span-con-psd-tip").html("两次密码不同");
+            $("spam-con-psd-tip").show();
+            return;
+        }
+        $("spam-con-psd-tip").hide();
+
+        $.ajax({
+            url: "{{ url_for('app_user_center.update_password') }}",
+            type: "POST",
+            data: {"uid": uid, "password": conPsd},
+            success: function (response) {
+                if (response === "ok") {
+                    window.location.reload();
+                }
+            },
+            error: function () {
+
+            }
+        })
+    }
+
+    function userAvatarChange() {
+        if (uid !== show_uid) {
+            return;
+        }
+        $("#userAvatar").modal({
+            backdrop: 'static',
+            keyboard: false
+        })
+    }
+
+    let base64Avatar = "";
+
+    function showAvatar(file) {
+        if (!file.files || !file.files[0]) {
+            return;
+        }
+        let reader = new FileReader();
+        reader.readAsDataURL(file.files[0]);
+        reader.onload = function (event) {
+            document.getElementById("avatar-show").src = event.target.result;
+            base64Avatar = event.target.result;
+            document.getElementById("label-tip").style.color = "#000000";
+            document.getElementById("label-tip").innerHTML = "重新选择";
+        }
+    }
+
+    function changeAvatar() {
+        if (base64Avatar === "") {
+            document.getElementById("label-tip").style.color = "#ff0000";
+            document.getElementById("label-tip").innerHTML = "头像不能为空";
+        }
+        $("#update").html("请等待");
+        $.ajax({
+            url: "{{ url_for('app_user_center.update_avatar') }}",
+            type: "POST",
+            data: {"uid": uid, "avatar": base64Avatar},
+            success: function (response) {
+                if (response === "ok") {
+                    window.location.reload();
+                }
+            },
+            error: function () {
+
+            }
+        })
+    }
+
+    function logout() {
+        $.ajax({
+            url: "{{ url_for('app_user_center.logout') }}",
+            type: "POST",
+            success: function (response) {
+                if (response === "ok") {
+                    window.location.href = "{{ url_for('app_sign.sign') }}"
+                }
+            },
+            error: function () {
+
+            }
         })
     }
 </script>

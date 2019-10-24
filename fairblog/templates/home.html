@@ -37,7 +37,7 @@
                 <div class="col-lg-8 post_container" id="post_container">
                 </div>
                 <div class="col-lg-4" id="user-sign">
-                    <div id="user-container" style="top: 90px">
+                    <div id="user-container" style="top: 90px" onclick="to_cur_user()">
                         <img id="user-avatar" src="" alt="">
                         <span id="user-username"></span>
                     </div>
@@ -68,7 +68,6 @@
             username = user.username;
             uid = user.uid;
             avatar = user.avatar;
-            console.log(username, uid, avatar);
             document.getElementById("user-username").innerHTML = username;
             document.getElementById("user-avatar").setAttribute("src", avatar);
         },
@@ -121,9 +120,12 @@
 
     function to_user(ele) {
         let name = ele.parentNode.children[1].innerHTML;
-        let uid = users[name];
-        console.log(uid);
+        let show_uid = users[name];
+        window.location.href = "{{ url_for('app_user_center.user_center') }}?uid=" + uid + "&show-uid=" + show_uid;
+    }
 
+    function to_cur_user() {
+        window.location.href = "{{ url_for('app_user_center.user_center') }}?uid=" + uid + "&show-uid=" + uid;
     }
 </script>
 {% endblock %}
